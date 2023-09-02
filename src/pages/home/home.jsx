@@ -13,10 +13,11 @@ function Home() {
 
   return (
     <div className='container'>
-        <header>
-            <img src="" alt="titulo" />
-            <img src="" alt="logoU" />
-            {/* desplegable para iniciar sesion usuario  */}
+        <header className='header'>
+            <img src={logo} alt="titulo" />
+            <img src={logo} alt="logoU" />
+            <img src={logo} alt="logoU" />
+            {/* desplegable o boton para iniciar sesion usuario  */}
             </header>      
       {isLoading ? (
         
@@ -25,10 +26,12 @@ function Home() {
           <h2>Universidad de Cundinamarca</h2>
         </div>
       ) : (
-        
-        <div className="main">
-          <h1>Hola</h1>
+        <div className='container-main'>
+          <div className="main">
+            <h1>Hola</h1>
+          </div>
         </div>
+        
       )}
     </div>
   );
