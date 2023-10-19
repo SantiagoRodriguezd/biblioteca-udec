@@ -1,10 +1,12 @@
 import "./home.css";
 import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
+import { inicioSesion } from "../../services/api";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [filesToUpload, setFilesToUpload] = useState([]);
 
   useEffect(() => {
@@ -38,13 +40,28 @@ function Home() {
         return { email: login, password: password };
       },
     }).then((result) => {
-      Swal.fire(`
-        Usuario: ${result.value.login}
-        Contraseña: ${result.value.password}
-      `.trim())
-      
-    })
-  }
+      const { email, password } = result.value;
+      inicioSesion({ email, password })
+        .then((response) => {
+          // Maneja la respuesta de la API
+          console.log(response.data);
+          Swal.fire({
+            icon: "success",
+            title: "Inicio de sesión exitoso",
+            text: response.data.message,
+          });
+        })
+        .catch((error) => {
+          // Maneja los errores de la API
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Error en el inicio de sesión",
+          });
+        });
+    });
+  };
 
   return (
     <div className="container">
@@ -78,7 +95,7 @@ function Home() {
                 multiple
               />
             </div>
-            <img src={centerImage} alt="Imagen en el centro" className="center-image" />
+            {/* <img src={centerImage} alt="Imagen en el centro" className="center-image" /> */}
           </div>
         </div>
       )}
