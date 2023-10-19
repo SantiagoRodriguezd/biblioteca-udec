@@ -3,11 +3,35 @@ import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
 import Swal from "sweetalert2";
 import { inicioSesion } from "../../services/api";
+import pdfImage from "../../assets/pdf.png";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [filesToUpload, setFilesToUpload] = useState([]);
+
+  const books = [
+    {
+      title: "Libro 1",
+      pdf: "../../Files/EJEMPLO 1.pdf",
+      image: pdfImage,
+    },
+    {
+      title: "Libro 2",
+      pdf: "../../Files/EJEMPLO 2.pdf",
+      image: pdfImage,
+    },
+    {
+      title: "Libro 3",
+      pdf: "../../Files/EJEMPLO 3.pdf",
+      image: pdfImage,
+    },
+    // Agrega detalles para los otros libros aquí
+  ];
+  const getFileNameFromPath = (path) => {
+    const parts = path.split("/");
+    return parts[parts.length - 1];
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,6 +108,19 @@ function Home() {
             <p>
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
+            <div className="contaianer-books">
+              {books.map((book, index) => (
+                <div className="book" key={index}>
+                  <img src={book.image} alt="" className="imagen-libros" />
+                  <h3 className="book-title">
+                    {getFileNameFromPath(book.pdf)}
+                  </h3>
+                  <button className="open-pdf" data-pdf={book.pdf}>
+                    Abrir Libro
+                  </button>
+                </div>
+              ))}
+            </div>
             <div className="buttons-container">
               <button className="main-button" onClick={handleViewFile}>
                 Ver

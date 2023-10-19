@@ -113,3 +113,44 @@
 .main-button:hover {
   background-color: #022215;
 }
+
+.contaianer-books{
+  display: flex;
+  justify-content: center;
+}
+
+.book {
+  
+  margin: 10px;
+  width: 100px;
+  height: 25vmin;
+  border: 1px solid black;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+h3{
+  font-size: 24px;
+}
+button.open-pdf {
+  background-color: #007b3e;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+button.open-pdf:hover {
+  background-color: #0055a0;
+}
+
+.imagen-libros{
+  width: 100px;
+}
+
+.book-title{
+  font-size: 18px;
+}
