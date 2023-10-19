@@ -1,10 +1,7 @@
-
 import "./home.css";
 import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
-import Swal from 'sweetalert2';
-import centerImage from "../../assets/img/UDEC.png"; 
-
+import Swal from 'sweetalert2'
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,33 +22,34 @@ function Home() {
     setFilesToUpload(selectedFiles);
   };
 
-  function login() {
+  const login = () => {
     Swal.fire({
-      title: 'Bienvenidos',
+      title: "Bienvenidos",
       html: `<input type="text" id="login" class="swal2-input" placeholder="Usuario">
       <input type="password" id="password" class="swal2-input" placeholder="Contraseña">`,
-      confirmButtonText: 'Iniciar sesión',
+      confirmButtonText: "Iniciar sesión",
       focusConfirm: false,
       preConfirm: () => {
-        const login = Swal.getPopup().querySelector('#login').value
-        const password = Swal.getPopup().querySelector('#password').value
+        const login = Swal.getPopup().querySelector("#login").value;
+        const password = Swal.getPopup().querySelector("#password").value;
         if (!login || !password) {
-          Swal.showValidationMessage(`Ingrese usuario y contraseña `)
+          Swal.showValidationMessage(`Ingrese usuario y contraseña `);
         }
-        return { login: login, password: password }
-      }
+        return { email: login, password: password };
+      },
     }).then((result) => {
       Swal.fire(`
         Usuario: ${result.value.login}
         Contraseña: ${result.value.password}
       `.trim())
+      
     })
   }
 
   return (
     <div className="container">
       <header className="header">
-        <img src={logo} alt="titulo" className="nombreU"/>
+        <img src={logo} alt="titulo" className="nombreU" />
         <img src={logo} alt="logoU" className="logoU" />
         <button className="ingresar-button" onClick={() => login()}>
           Ingresar
