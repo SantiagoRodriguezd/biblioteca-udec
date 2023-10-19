@@ -1,8 +1,8 @@
-
 import "./home.css";
 import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
+import { inicioSesion } from "../../services/api";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,49 +23,60 @@ function Home() {
     setFilesToUpload(selectedFiles);
   };
 
-  function login() {
+  const login = () => {
     Swal.fire({
-      title: 'Bienvenidos',
+      title: "Bienvenidos",
       html: `<input type="text" id="login" class="swal2-input" placeholder="Usuario">
       <input type="password" id="password" class="swal2-input" placeholder="Contraseña">`,
-      confirmButtonText: 'Iniciar sesión',
+      confirmButtonText: "Iniciar sesión",
       focusConfirm: false,
       preConfirm: () => {
-        const login = Swal.getPopup().querySelector('#login').value
-        const password = Swal.getPopup().querySelector('#password').value
+        const login = Swal.getPopup().querySelector("#login").value;
+        const password = Swal.getPopup().querySelector("#password").value;
         if (!login || !password) {
-          Swal.showValidationMessage(`Ingrese usuario y contraseña `)
+          Swal.showValidationMessage(`Ingrese usuario y contraseña `);
         }
-        return { login: login, password: password }
-      }
+        return { email: login, password: password };
+      },
     }).then((result) => {
-      Swal.fire(`
-        Usuario: ${result.value.login}
-        Contraseña: ${result.value.password}
-      `.trim())
-      
-    })
-  }
+      const { email, password } = result.value;
+      inicioSesion({ email, password })
+        .then((response) => {
+          // Maneja la respuesta de la API
+          console.log(response.data);
+          Swal.fire({
+            icon: "success",
+            title: "Inicio de sesión exitoso",
+            text: response.data.message,
+          });
+        })
+        .catch((error) => {
+          // Maneja los errores de la API
+          console.error(error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Error en el inicio de sesión",
+          });
+        });
+    });
+  };
 
   return (
     <div className="container">
       <header className="header">
-        <img src={logo} alt="titulo" className="nombreU"/>
+        <img src={logo} alt="titulo" className="nombreU" />
         <img src={logo} alt="logoU" className="logoU" />
-        <button
-  className="ingresar-button"
-  onClick={() => login()}
->
-  Ingresar
-</button>
-
+        <button className="ingresar-button" onClick={() => login()}>
+          Ingresar
+        </button>
       </header>
       {isLoading ? (
         <div className="loading-overlay loading">
           <img src={logo} alt="" />
           <h2>Universidad de Cundinamarca</h2>
         </div>
-      ) :(
+      ) : (
         <div className="container-main">
           <div className="main">
             <h1>GUIAS Y MANUALES DE USUARIO</h1>
@@ -77,12 +88,11 @@ function Home() {
                 Ver
               </button>
               <input
-              type="file"
-             className="main-button button-upload"
-             onChange={handleUploadFiles}
-             multiple
-            />
-
+                type="file"
+                className="main-button button-upload"
+                onChange={handleUploadFiles}
+                multiple
+              />
             </div>
           </div>
         </div>
