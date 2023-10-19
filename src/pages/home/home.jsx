@@ -2,7 +2,9 @@
 import "./home.css";
 import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import centerImage from "../../assets/img/UDEC.png"; 
+
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +45,6 @@ function Home() {
         Usuario: ${result.value.login}
         Contraseña: ${result.value.password}
       `.trim())
-      
     })
   }
 
@@ -52,20 +53,16 @@ function Home() {
       <header className="header">
         <img src={logo} alt="titulo" className="nombreU"/>
         <img src={logo} alt="logoU" className="logoU" />
-        <button
-  className="ingresar-button"
-  onClick={() => login()}
->
-  Ingresar
-</button>
-
+        <button className="ingresar-button" onClick={() => login()}>
+          Ingresar
+        </button>
       </header>
       {isLoading ? (
         <div className="loading-overlay loading">
           <img src={logo} alt="" />
           <h2>Universidad de Cundinamarca</h2>
         </div>
-      ) :(
+      ) : (
         <div className="container-main">
           <div className="main">
             <h1>GUIAS Y MANUALES DE USUARIO</h1>
@@ -77,17 +74,18 @@ function Home() {
                 Ver
               </button>
               <input
-              type="file"
-             className="main-button button-upload"
-             onChange={handleUploadFiles}
-             multiple
-            />
-
+                type="file"
+                className="main-button button-upload"
+                onChange={handleUploadFiles}
+                multiple
+              />
             </div>
+            <img src={centerImage} alt="Imagen en el centro" className="center-image" />
           </div>
         </div>
       )}
     </div>
   );
 }
+
 export default Home;
