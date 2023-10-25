@@ -150,35 +150,9 @@ button.open-pdf:hover {
 }
 
 .imagen-libros{
-  width: 100px;
+  width: 50px;
 }
 
 .book-title{
-  font-size: 10px;
-}
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-.user-info p {
-  color: #ffffff;
-  font-size: 16px;
-  margin-right: 10px; /* Ajusta el margen derecho para separar el texto del botón */
-}
-.logout-button {
-  background-color: #ffffff;
-  color: #007b3e;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 20px; /* Ajusta el margen izquierdo para separar el botón de cerrar sesión */
-}
-
-.logout-button:hover {
-  background-color: #00482b;
-  color: #ffffff;
+  font-size: 18px;
 }

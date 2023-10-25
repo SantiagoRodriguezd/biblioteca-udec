@@ -1,4 +1,3 @@
-import "./home.css";
 import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
 import Swal from "sweetalert2";
@@ -26,7 +25,6 @@ function Home() {
       pdf: "../../Files/EJEMPLO 3.pdf",
       image: pdfImage,
     },
-    // Agrega detalles para los otros libros aquí
   ];
 
   const getFileNameFromPath = (path) => {
@@ -127,14 +125,16 @@ function Home() {
             <p>
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
-            <div className="contaianer-books">
+            <div className="container-books-horizontal">
               {books.map((book, index) => (
-                <div className="book" key={index}>
-                  <img src={book.image} alt="" className="imagen-libros" />
+                <div className="book-horizontal" key={index}>
+                  <div className="book-image">
+                    <img src={book.image} alt="" className="imagen-libros" />
+                  </div>
                   <h3 className="book-title">
                     {getFileNameFromPath(book.pdf)}
                   </h3>
-                  <button className="open-pdf" data-pdf={book.pdf}>
+                  <button className="open-pdf" onClick={() => {}}>
                     Abrir Libro
                   </button>
                 </div>
