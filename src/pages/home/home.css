@@ -148,9 +148,24 @@ button.open-pdf:hover {
 }
 
 .imagen-libros{
-  width: 100px;
+  width: 50px;
 }
 
 .book-title{
-  font-size: 18px;
+  font-size: 10px;
+}
+.container-books-horizontal {
+  display: flex;
+  flex-direction: row; /* Organiza los libros en fila horizontal */
+  justify-content: space-between; /* Espaciado entre los libros */
+}
+
+.book-horizontal {
+  width: 30%; /* Ancho de cada libro */
+  text-align: center;
+}
+
+.book-image {
+  max-width: 100px; /* Tamaño máximo de las imágenes de los libros */
+  margin: 0 auto; /* Centra las imágenes horizontalmente */
 }

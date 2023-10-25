@@ -1,5 +1,4 @@
-import "./home.css";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
 import Swal from "sweetalert2";
 import { inicioSesion } from "../../services/api";
@@ -7,7 +6,7 @@ import pdfImage from "../../assets/pdf.png";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  // eslint-disable-next-line no-unused-vars
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState([]);
 
   const books = [
@@ -26,8 +25,8 @@ function Home() {
       pdf: "../../Files/EJEMPLO 3.pdf",
       image: pdfImage,
     },
-    // Agrega detalles para los otros libros aquí
   ];
+
   const getFileNameFromPath = (path) => {
     const parts = path.split("/");
     return parts[parts.length - 1];
@@ -39,8 +38,8 @@ function Home() {
     }, 5000);
   }, []);
 
-  const handleViewFile = () => {
-    alert("Ver archivo específico");
+  const handleViewFile = (pdfUrl) => {
+    window.open(pdfUrl, "_blank");
   };
 
   const handleUploadFiles = (e) => {
@@ -67,8 +66,8 @@ function Home() {
       const { email, password } = result.value;
       inicioSesion({ email, password })
         .then((response) => {
-          // Maneja la respuesta de la API
           console.log(response.data);
+          setIsLoggedIn(true);
           Swal.fire({
             icon: "success",
             title: "Inicio de sesión exitoso",
@@ -76,7 +75,6 @@ function Home() {
           });
         })
         .catch((error) => {
-          // Maneja los errores de la API
           console.error(error);
           Swal.fire({
             icon: "error",
@@ -108,31 +106,40 @@ function Home() {
             <p>
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
-            <div className="contaianer-books">
+            <div className="container-books-horizontal">
               {books.map((book, index) => (
-                <div className="book" key={index}>
-                  <img src={book.image} alt="" className="imagen-libros" />
+                <div className="book-horizontal" key={index}>
+                  <div className="book-image">
+                    <img
+                      src={book.image}
+                      alt=""
+                      className="imagen-libros"
+                    />
+                  </div>
                   <h3 className="book-title">
                     {getFileNameFromPath(book.pdf)}
                   </h3>
-                  <button className="open-pdf" data-pdf={book.pdf}>
+                  <button className="open-pdf" onClick={() => handleViewFile(book.pdf)}>
                     Abrir Libro
                   </button>
                 </div>
               ))}
             </div>
             <div className="buttons-container">
-              <button className="main-button" onClick={handleViewFile}>
-                Ver
-              </button>
-              <input
-                type="file"
-                className="main-button button-upload"
-                onChange={handleUploadFiles}
-                multiple
-              />
+              {isLoggedIn && (
+                <>
+                  <button className="main-button" onClick={handleViewFile}>
+                    Ver
+                  </button>
+                  <input
+                    type="file"
+                    className="main-button button-upload"
+                    onChange={handleUploadFiles}
+                    multiple
+                  />
+                </>
+              )}
             </div>
-            {/* <img src={centerImage} alt="Imagen en el centro" className="center-image" /> */}
           </div>
         </div>
       )}
