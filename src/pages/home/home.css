@@ -70,12 +70,10 @@
 }
 
 .logoU {
-  width: 10%;
-  height: 90px;
+  height: 80px;
 }
-.nombreU {
-  width: 10%;
-  height: 90px;
+.titulo-udec{
+  color: #fff;
 }
 .buttons-container {
   display: flex;

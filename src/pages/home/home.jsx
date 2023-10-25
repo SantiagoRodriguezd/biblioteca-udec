@@ -2,35 +2,12 @@ import { useState, useEffect } from "react";
 import logo from "../../assets/img/U.png";
 import Swal from "sweetalert2";
 import { inicioSesion } from "../../services/api";
-import pdfImage from "../../assets/pdf.png";
+import "./home.css";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
-
-  const books = [
-    {
-      title: "Libro 1",
-      pdf: "../../Files/EJEMPLO 1.pdf",
-      image: pdfImage,
-    },
-    {
-      title: "Libro 2",
-      pdf: "../../Files/EJEMPLO 2.pdf",
-      image: pdfImage,
-    },
-    {
-      title: "Libro 3",
-      pdf: "../../Files/EJEMPLO 3.pdf",
-      image: pdfImage,
-    },
-  ];
-
-  const getFileNameFromPath = (path) => {
-    const parts = path.split("/");
-    return parts[parts.length - 1];
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -98,8 +75,8 @@ function Home() {
   return (
     <div className="container">
       <header className="header">
-        <img src={logo} alt="titulo" className="nombreU" />
-        <img src={logo} alt="logoU" className="logoU" />
+        <img src={logo} alt="titulo" className="logoU" />
+        <h2 className="titulo-udec">Universidad de Cundinamarca</h2>
         {isLoggedIn ? ( // Mostrar el nombre de usuario y el botón de cerrar sesión si el usuario ha iniciado sesión
           <div className="user-info">
             <p>Bienvenido, {userName}</p>
@@ -125,21 +102,7 @@ function Home() {
             <p>
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
-            <div className="container-books-horizontal">
-              {books.map((book, index) => (
-                <div className="book-horizontal" key={index}>
-                  <div className="book-image">
-                    <img src={book.image} alt="" className="imagen-libros" />
-                  </div>
-                  <h3 className="book-title">
-                    {getFileNameFromPath(book.pdf)}
-                  </h3>
-                  <button className="open-pdf" onClick={() => {}}>
-                    Abrir Libro
-                  </button>
-                </div>
-              ))}
-            </div>
+
             {isLoggedIn && ( // Mostrar los botones solo si el usuario ha iniciado sesión
               <div className="buttons-container">
                 <input
