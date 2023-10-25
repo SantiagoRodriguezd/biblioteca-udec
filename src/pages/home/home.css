@@ -2,8 +2,9 @@
   background: linear-gradient(to bottom, #007b3e, #00482b);
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 10vh;
   width: 100%;
+ 
 }
 
 .header {
@@ -20,21 +21,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .main {
   .center-image {
-    max-width: 10%;
-    max-height: 90%;
+    max-width: 100%;
+    max-height: 100%;
     display: block;
     position: absolute; /* Cambia la posición a absoluta */
     top: 0; /* Posición arriba del contenedor */
     left: 10; /* Posición a la izquierda del contenedor */
   }
   
-  background-color: aliceblue;
-  width: 95%;
-  height: 85vh;
+  background-color: #ffffff;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,15 +44,15 @@
 }
 
 .main h1 {
-  font-size: 50px; /* Aumenta el tamaño de fuente */
+  font-size: 35px; /* Aumenta el tamaño de fuente */
   font-weight: bold; /* Hace el texto más grueso (negrita) */
-  margin-bottom: 20px; /* Agrega un margen inferior para separar el texto de los botones */
+  margin-bottom: 0px; /* Agrega un margen inferior para separar el texto de los botones */
   color: #007b3e; /* Cambia el color del texto a verde (puedes ajustarlo según tus preferencias) */
 }
 
 .main p {
   font-size: 20px; /* Cambia el tamaño de fuente del párrafo (ajústalo según tus necesidades) */
-  margin-top: 30px; /* Agrega un pequeño margen superior al párrafo */
+  margin-top: 0px; /* Agrega un pequeño margen superior al párrafo */
   color: #333; /* Cambia el color del texto del párrafo (puedes ajustarlo según tus preferencias) */
 }
 
@@ -79,12 +80,12 @@
 .buttons-container {
   display: flex;
   gap: 40px;
-  margin-top: 300px; /* Agregar margen superior para separar los botones */
+  margin-top: 100px; /* Agregar margen superior para separar los botones */
 }
 
 .main-button {
   background-color: #007b3e;
-  color: rgb(255, 255, 255);
+  color: rgb(245, 245, 245);
   padding: 10px 20px;
   border: none;
   cursor: pointer;
@@ -110,11 +111,10 @@
   color: #ffffff;
 }
 
-.main-button:hover {
-  background-color: #022215;
-}
+
 
 .contaianer-books{
+
   display: flex;
   justify-content: center;
 }
@@ -124,9 +124,11 @@
   margin: 10px;
   width: 100px;
   height: 25vmin;
-  border: 1px solid black;
+  border: 100px solid rgb(255, 255, 255);
   display: flex !important;
   flex-direction: column;
+
+  
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -144,7 +146,7 @@ button.open-pdf {
   border-radius: 10px;
 }
 button.open-pdf:hover {
-  background-color: #0055a0;
+  background-color: #00315c50;
 }
 
 .imagen-libros{
@@ -152,5 +154,31 @@ button.open-pdf:hover {
 }
 
 .book-title{
-  font-size: 18px;
+  font-size: 10px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info p {
+  color: #ffffff;
+  font-size: 16px;
+  margin-right: 10px; /* Ajusta el margen derecho para separar el texto del botón */
+}
+.logout-button {
+  background-color: #ffffff;
+  color: #007b3e;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 20px; /* Ajusta el margen izquierdo para separar el botón de cerrar sesión */
+}
+
+.logout-button:hover {
+  background-color: #00482b;
+  color: #ffffff;
 }

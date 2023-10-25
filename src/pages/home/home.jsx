@@ -7,8 +7,8 @@ import pdfImage from "../../assets/pdf.png";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  // eslint-disable-next-line no-unused-vars
-  const [filesToUpload, setFilesToUpload] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const books = [
     {
@@ -28,6 +28,7 @@ function Home() {
     },
     // Agrega detalles para los otros libros aquí
   ];
+
   const getFileNameFromPath = (path) => {
     const parts = path.split("/");
     return parts[parts.length - 1];
@@ -39,12 +40,9 @@ function Home() {
     }, 5000);
   }, []);
 
-  const handleViewFile = () => {
-    alert("Ver archivo específico");
-  };
-
   const handleUploadFiles = (e) => {
     const selectedFiles = Array.from(e.target.files);
+    // eslint-disable-next-line no-undef
     setFilesToUpload(selectedFiles);
   };
 
@@ -61,30 +59,42 @@ function Home() {
         if (!login || !password) {
           Swal.showValidationMessage(`Ingrese usuario y contraseña `);
         }
-        return { email: login, password: password };
+        return { correo: login, password: password };
       },
     }).then((result) => {
-      const { email, password } = result.value;
-      inicioSesion({ email, password })
-        .then((response) => {
-          // Maneja la respuesta de la API
-          console.log(response.data);
-          Swal.fire({
-            icon: "success",
-            title: "Inicio de sesión exitoso",
-            text: response.data.message,
+      if (result && result.value) {
+        const { correo, password } = result.value;
+        inicioSesion({ correo, password })
+          .then((response) => {
+            // Maneja la respuesta de la API
+            console.log(response.data);
+            setUserName(correo); // Guardar el nombre de usuario
+            setIsLoggedIn(true);
+            Swal.fire({
+              icon: "success",
+              title: "Inicio de sesión exitoso",
+              text: response.data.message,
+            });
+            setIsLoggedIn(true); // Actualizar el estado de isLoggedIn a true después del inicio de sesión
+          })
+          .catch((error) => {
+            // Maneja los errores de la API
+            console.error(error);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Error en el inicio de sesión",
+            });
           });
-        })
-        .catch((error) => {
-          // Maneja los errores de la API
-          console.error(error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Error en el inicio de sesión",
-          });
-        });
+      } else {
+        // Manejo en caso de que result o result.value sean undefined
+        console.error("El objeto result o result.value es undefined.");
+      }
     });
+  };
+  const logout = () => {
+    setIsLoggedIn(false);
+    setUserName("");
   };
 
   return (
@@ -92,9 +102,18 @@ function Home() {
       <header className="header">
         <img src={logo} alt="titulo" className="nombreU" />
         <img src={logo} alt="logoU" className="logoU" />
-        <button className="ingresar-button" onClick={() => login()}>
-          Ingresar
-        </button>
+        {isLoggedIn ? ( // Mostrar el nombre de usuario y el botón de cerrar sesión si el usuario ha iniciado sesión
+          <div className="user-info">
+            <p>Bienvenido, {userName}</p>
+            <button className="logout-button" onClick={logout}>
+              Cerrar Sesión
+            </button>
+          </div>
+        ) : (
+          <button className="ingresar-button" onClick={() => login()}>
+            Ingresar
+          </button>
+        )}
       </header>
       {isLoading ? (
         <div className="loading-overlay loading">
@@ -121,18 +140,16 @@ function Home() {
                 </div>
               ))}
             </div>
-            <div className="buttons-container">
-              <button className="main-button" onClick={handleViewFile}>
-                Ver
-              </button>
-              <input
-                type="file"
-                className="main-button button-upload"
-                onChange={handleUploadFiles}
-                multiple
-              />
-            </div>
-            {/* <img src={centerImage} alt="Imagen en el centro" className="center-image" /> */}
+            {isLoggedIn && ( // Mostrar los botones solo si el usuario ha iniciado sesión
+              <div className="buttons-container">
+                <input
+                  type="file"
+                  className="main-button button-upload"
+                  onChange={handleUploadFiles}
+                  multiple
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
