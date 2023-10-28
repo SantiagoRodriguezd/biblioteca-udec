@@ -43,16 +43,9 @@
   text-align: center; /* Centra el texto horizontalmente */
 }
 
-.main h1 {
-  font-size: 35px; /* Aumenta el tamaño de fuente */
-  font-weight: bold; /* Hace el texto más grueso (negrita) */
-  margin-bottom: 0px; /* Agrega un margen inferior para separar el texto de los botones */
-  color: #007b3e; /* Cambia el color del texto a verde (puedes ajustarlo según tus preferencias) */
-}
-
 .main p {
-  font-size: 20px; /* Cambia el tamaño de fuente del párrafo (ajústalo según tus necesidades) */
-  margin-top: 0px; /* Agrega un pequeño margen superior al párrafo */
+  font-size: 40px; /* Cambia el tamaño de fuente del párrafo (ajústalo según tus necesidades) */
+  margin-top: 25px; /* Agrega un pequeño margen superior al párrafo */
   color: #333; /* Cambia el color del texto del párrafo (puedes ajustarlo según tus preferencias) */
 }
 
@@ -67,13 +60,20 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  
+}
+
+.loading-overlay h2 {
+  font-size: 50px; /* Establece el tamaño de fuente deseado para el texto */
+  color: #ffffff;
 }
 
 .logoU {
   height: 80px;
 }
 .titulo-udec{
-  color: #fff;
+  color: #ffffff;
+  font-family: "Helvetica", "Helvetica", sans-serif;
 }
 .buttons-container {
   display: flex;
@@ -154,3 +154,28 @@ button.open-pdf:hover {
 .book-title{
   font-size: 18px;
 }
+
+.bottom-banner {
+  background-color: #00482b; /* Cambia el color de fondo según tus preferencias */
+  color: #fff; /* Cambia el color del texto según tus preferencias */
+  padding: 10px; /* Añade relleno para mejorar la apariencia */
+  text-align: center; /* Centra el texto en el banner */
+  position: fixed; /* Fija el banner en la parte inferior de la ventana del navegador */
+  bottom: 0; /* Lo coloca en la parte inferior */
+  left: 0; /* Lo alinea a la izquierda */
+  width: 100%; /* Ancho del banner al 100% de la ventana */
+}
+
+/* Estilos para el carrusel de información adicional */
+.information-carousel {
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.carousel-viewport {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+

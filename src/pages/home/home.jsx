@@ -8,12 +8,27 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [scrollIndex, setScrollIndex] = useState(0); // Índice de desplazamiento
+  const scrollItems = [
+    "En nuestra pagina encontraras todo tipo de ayuda para que disfurtes de todos nuestros servicios universitarios",
+    "Información 2",
+    "Información 3",
+    // Agrega más información aquí
+  ];
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 5000);
-  }, []);
+
+    // Cambia el índice de desplazamiento cada 5 segundos
+    const interval = setInterval(() => {
+      setScrollIndex((prevIndex) => (prevIndex + 1) % scrollItems.length);
+    }, 5000);
+
+    // Limpia el intervalo cuando el componente se desmonta
+    return () => clearInterval(interval);
+  }, [scrollItems]);
 
   const handleUploadFiles = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -67,6 +82,7 @@ function Home() {
       }
     });
   };
+
   const logout = () => {
     setIsLoggedIn(false);
     setUserName("");
@@ -76,7 +92,7 @@ function Home() {
     <div className="container">
       <header className="header">
         <img src={logo} alt="titulo" className="logoU" />
-        <h2 className="titulo-udec">Universidad de Cundinamarca</h2>
+        <h2 className="titulo-udec">GUIAS Y MANUALES DE USUARIO</h2>
         {isLoggedIn ? ( // Mostrar el nombre de usuario y el botón de cerrar sesión si el usuario ha iniciado sesión
           <div className="user-info">
             <p>Bienvenido, {userName}</p>
@@ -98,10 +114,12 @@ function Home() {
       ) : (
         <div className="container-main">
           <div className="main">
-            <h1>GUIAS Y MANUALES DE USUARIO</h1>
+            
             <p>
+
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
+
 
             {isLoggedIn && ( // Mostrar los botones solo si el usuario ha iniciado sesión
               <div className="buttons-container">
@@ -113,9 +131,29 @@ function Home() {
                 />
               </div>
             )}
+
+            <div className="information-carousel">
+              <div className="carousel-viewport">
+                {/* Muestra todas las informaciones dentro de un contenedor de carrusel */
+                scrollItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className={index === scrollIndex ? "active" : "inactive"}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
+      <div className="bottom-banner">
+        Universidad de Cundinamarca <br />
+        Siglo 21<br />
+        Oficina de Sistemas de Información<br />
+        2023
+      </div>
     </div>
   );
 }
