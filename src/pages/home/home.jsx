@@ -10,7 +10,7 @@ function Home() {
   const [userName, setUserName] = useState("");
   const [scrollIndex, setScrollIndex] = useState(0); // Índice de desplazamiento
   const scrollItems = [
-    "En nuestra pagina encontraras todo tipo de ayuda para que disfurtes de todos nuestros servicios universitarios",
+    "informacion 1",
     "Información 2",
     "Información 3",
     // Agrega más información aquí
