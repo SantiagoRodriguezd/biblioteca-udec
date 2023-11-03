@@ -3,37 +3,69 @@ import logo from "../../assets/img/U.png";
 import Swal from "sweetalert2";
 import { inicioSesion } from "../../services/api";
 import "./home.css";
+import axios from "axios";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
-  const [scrollIndex, setScrollIndex] = useState(0); // Índice de desplazamiento
-  const scrollItems = [
-    "informacion 1",
-    "Información 2",
-    "Información 3",
-    // Agrega más información aquí
-  ];
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 5000);
+  }, []);
 
-    // Cambia el índice de desplazamiento cada 5 segundos
-    const interval = setInterval(() => {
-      setScrollIndex((prevIndex) => (prevIndex + 1) % scrollItems.length);
-    }, 5000);
+  const handleFileSelect = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files);
+      return selectedFiles;
+    }
+    return [];
+  };
 
-    // Limpia el intervalo cuando el componente se desmonta
-    return () => clearInterval(interval);
-  }, [scrollItems]);
+  const uploadFiles = (selectedFiles) => {
+    if (selectedFiles && selectedFiles.length > 0) {
+      const formData = new FormData();
+      selectedFiles.forEach((file) => {
+        formData.append("archivo", file);
+        formData.append("tipo", file.type);
+        formData.append("nombre", file.name);
+      });
+      let config = {
+        method: "post",
+        url: "http://localhost:8080/archivos/crearArchivo",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIkMmEkMTIkc05ZaU1vcTV3SlFjTHpZZEpIbHkzZTFta2c0SHJzLm9PdER0UXlwN2lTeTA3Znk3emY1S0siLCJleHAiOjE2OTkwNDM5ODN9.OD650QQFq--CB-O9T_LG2l5wVkoCFAehnjUiJPeFXcw",
+          "Content-Type": "multipart/form-data",
+        },
+        data: formData,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+          // Manejar el error si ocurre algún problema durante la carga
+        });
+    }
+  };
 
   const handleUploadFiles = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    // eslint-disable-next-line no-undef
-    setFilesToUpload(selectedFiles);
+    const selectedFiles = handleFileSelect(e);
+  };
+
+  const sendFiles = () => {
+    const inputElement = document.querySelector('input[type="file"]');
+    if (inputElement && inputElement.files.length > 0) {
+      const selectedFiles = Array.from(inputElement.files);
+      uploadFiles(selectedFiles);
+    }
   };
 
   const login = () => {
@@ -57,7 +89,8 @@ function Home() {
         inicioSesion({ correo, password })
           .then((response) => {
             // Maneja la respuesta de la API
-            console.log(response.data);
+
+            const { token } = response.data;
             setUserName(correo); // Guardar el nombre de usuario
             setIsLoggedIn(true);
             Swal.fire({
@@ -65,6 +98,7 @@ function Home() {
               title: "Inicio de sesión exitoso",
               text: response.data.message,
             });
+            sessionStorage.setItem("token", token);
             setIsLoggedIn(true); // Actualizar el estado de isLoggedIn a true después del inicio de sesión
           })
           .catch((error) => {
@@ -83,9 +117,50 @@ function Home() {
     });
   };
 
+  function bytesToPDF(bytes) {
+    const binary = atob(bytes);
+    const array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    const blob = new Blob([new Uint8Array(array)], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    return url;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/archivos/all", {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIkMmEkMTIkc05ZaU1vcTV3SlFjTHpZZEpIbHkzZTFta2c0SHJzLm9PdER0UXlwN2lTeTA3Znk3emY1S0siLCJleHAiOjE2OTkwNDM5ODN9.OD650QQFq--CB-O9T_LG2l5wVkoCFAehnjUiJPeFXcw",
+          },
+          responseType: "json",
+        });
+        setFiles(response.data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleFileDownload = (file) => {
+    const url = bytesToPDF(file.archivo, `${file.nombre}.pdf`);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${file.nombre}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const logout = () => {
     setIsLoggedIn(false);
     setUserName("");
+    sessionStorage.removeItem("token");
   };
 
   return (
@@ -93,7 +168,7 @@ function Home() {
       <header className="header">
         <img src={logo} alt="titulo" className="logoU" />
         <h2 className="titulo-udec">GUIAS Y MANUALES DE USUARIO</h2>
-        {isLoggedIn ? ( // Mostrar el nombre de usuario y el botón de cerrar sesión si el usuario ha iniciado sesión
+        {isLoggedIn ? (
           <div className="user-info">
             <p>Bienvenido, {userName}</p>
             <button className="logout-button" onClick={logout}>
@@ -114,44 +189,60 @@ function Home() {
       ) : (
         <div className="container-main">
           <div className="main">
-            
-            <p>
-
+            <p className="titulo-bienvenida">
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
 
+            <div className="ver-archivos">
+              <h1>Archivos</h1>
+              <ul>
+                {files.map((file) => (
+                  <li key={file.id_file}>
+                    {file.nombre} -{" "}
+                    <button onClick={() => handleFileDownload(file)}>
+                      Descargar
+                    </button>{" "}
+                    -{" "}
+                    <a
+                      href={bytesToPDF(file.archivo, `${file.nombre}.pdf`)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Ver
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            {isLoggedIn && ( // Mostrar los botones solo si el usuario ha iniciado sesión
-              <div className="buttons-container">
-                <input
-                  type="file"
-                  className="main-button button-upload"
-                  onChange={handleUploadFiles}
-                  multiple
-                />
+            {isLoggedIn && (
+              <div>
+                {" "}
+                <div className="buttons-container">
+                  <input
+                    type="file"
+                    className="main-button button-upload"
+                    onChange={handleUploadFiles}
+                    multiple
+                  />
+                </div>
+                <div>
+                  <button className="" onClick={sendFiles}>
+                    {" "}
+                    enviar archivos
+                  </button>
+                </div>
               </div>
             )}
-
-            <div className="information-carousel">
-              <div className="carousel-viewport">
-                {/* Muestra todas las informaciones dentro de un contenedor de carrusel */
-                scrollItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className={index === scrollIndex ? "active" : "inactive"}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       )}
       <div className="bottom-banner">
         Universidad de Cundinamarca <br />
-        Siglo 21<br />
-        Oficina de Sistemas de Información<br />
+        Siglo 21
+        <br />
+        Oficina de Sistemas de Información
+        <br />
         2023
       </div>
     </div>
