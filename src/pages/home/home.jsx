@@ -169,9 +169,9 @@ function Home() {
         <img src={logo} alt="titulo" className="logoU" />
         <h2 className="titulo-udec">GUIAS Y MANUALES DE USUARIO</h2>
         {isLoggedIn ? (
-          <div className="user-info">
-            <p>Bienvenido, {userName}</p>
-            <button className="logout-button" onClick={logout}>
+          <div className="usuario-info">
+            <p className="usuario-nombre">Bienvenido, {userName}</p>
+            <button className="salir-button" onClick={logout}>
               Cerrar Sesión
             </button>
           </div>
@@ -193,8 +193,8 @@ function Home() {
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
 
-            <div className="ver-archivos">
-              <h1>Archivos</h1>
+            <div className="container-archivos">
+              <h1 className="archivos-titulo">Archivos</h1>
               <ul>
                 {files.map((file) => (
                   <li key={file.id_file}>
