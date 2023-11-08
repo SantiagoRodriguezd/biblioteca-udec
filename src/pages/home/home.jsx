@@ -11,6 +11,8 @@ function Home() {
   const [userName, setUserName] = useState("");
   const [files, setFiles] = useState([]);
 
+  const token = sessionStorage.getItem("token");
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -37,8 +39,7 @@ function Home() {
         method: "post",
         url: "http://localhost:8080/archivos/crearArchivo",
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIkMmEkMTIkc05ZaU1vcTV3SlFjTHpZZEpIbHkzZTFta2c0SHJzLm9PdER0UXlwN2lTeTA3Znk3emY1S0siLCJleHAiOjE2OTkwNDM5ODN9.OD650QQFq--CB-O9T_LG2l5wVkoCFAehnjUiJPeFXcw",
+          Authorization: "Bearer " + token,
           "Content-Type": "multipart/form-data",
         },
         data: formData,
@@ -134,8 +135,7 @@ function Home() {
         const response = await axios.get("http://localhost:8080/archivos/all", {
           headers: {
             "Access-Control-Allow-Origin": "*",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIkMmEkMTIkc05ZaU1vcTV3SlFjTHpZZEpIbHkzZTFta2c0SHJzLm9PdER0UXlwN2lTeTA3Znk3emY1S0siLCJleHAiOjE2OTkwNDM5ODN9.OD650QQFq--CB-O9T_LG2l5wVkoCFAehnjUiJPeFXcw",
+            Authorization: "Bearer " + token,
           },
           responseType: "json",
         });
@@ -187,8 +187,8 @@ function Home() {
           <h2>Universidad de Cundinamarca</h2>
         </div>
       ) : (
-        <div className="container-main">
-          <div className="main">
+        <div className="container-informacion">
+          <div className="container-principal">
             <p className="titulo-bienvenida">
               Bienvenido a nuestra plataforma de guías y manuales de usuario.
             </p>
@@ -221,23 +221,23 @@ function Home() {
                 <div className="buttons-container">
                   <input
                     type="file"
-                    className="main-button button-upload"
+                    className="main-button"
                     onChange={handleUploadFiles}
                     multiple
                   />
-                </div>
-                <div>
-                  <button className="" onClick={sendFiles}>
-                    {" "}
-                    enviar archivos
-                  </button>
+                  <div className="button-Cargar">
+                    <button className="Cargar" onClick={sendFiles}>
+                      {" "}
+                      Cargar archivos
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
           </div>
         </div>
       )}
-      <div className="bottom-banner">
+      <div className="footer">
         Universidad de Cundinamarca <br />
         Siglo 21
         <br />
