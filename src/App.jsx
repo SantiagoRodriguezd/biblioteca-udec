@@ -1,17 +1,20 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/home";
-// import VerDocumentos from './pages/'; // Componente para mostrar documentos
-// import SubirDocumento from './SubirDocumento'; // Componente para cargar documentos
 
 function App() {
+  const storedToken = sessionStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = React.useState(!!storedToken);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<Home />} />
+        <Route
+          path=""
+          element={
+            <Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          }
+        />
       </Routes>
-      {/* <Route path="/ver-documentos" component={VerDocumentos} />
-        <Route path="/subir-documento" component={SubirDocumento} /> */}
     </BrowserRouter>
   );
 }
