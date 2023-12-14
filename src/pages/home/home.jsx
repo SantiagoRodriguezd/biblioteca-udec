@@ -86,12 +86,26 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
   const handleUploadFiles = (e) => {
     const selectedFiles = handleFileSelect(e);
   };
-
-  const sendFiles = () => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/archivos/all", {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          Authorization: "Bearer " + token,
+        },
+        responseType: "json",
+      });
+      setFiles(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+  const sendFiles = async () => {
     const inputElement = document.querySelector('input[type="file"]');
     if (inputElement && inputElement.files.length > 0) {
       const selectedFiles = Array.from(inputElement.files);
-      uploadFiles(selectedFiles);
+      await uploadFiles(selectedFiles);
+      await fetchData();
     }
   };
 
@@ -171,14 +185,31 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
     fetchData();
   }, []);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const openModal = (content) => {
+    setModalContent(content);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalContent("");
+    setModalVisible(false);
+  };
+
   const handleFileDownload = (file) => {
     const url = bytesToPDF(file.archivo, `${file.nombre}.pdf`);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${file.nombre}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    openModal(
+      <div>
+        <button onClick={closeModal}>Cerrar</button>
+        <iframe src={url} title={file.nombre} width="100%" height="500px" />
+      </div>
+    );
   };
 
   const logout = () => {
@@ -276,6 +307,7 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                           href={bytesToPDF(file.archivo, `${file.nombre}.pdf`)}
                           target="_blank"
                           rel="noreferrer"
+                          className="ver-button"
                         >
                           Ver
                         </a>{" "}
@@ -321,6 +353,11 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
         <br />
         2023
       </div>
+      {modalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content">{modalContent}</div>
+        </div>
+      )}
     </div>
   );
 }
