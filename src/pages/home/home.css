@@ -115,22 +115,23 @@ margin:0%
 .Cargar{
   background-color:#007b3e;
   color:#fff ;
-  padding: 10px 20px;
+  padding: 8px 8px;
   border: none;
   cursor: pointer;
   border-radius: 16px;
-  font-size: 16px;
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
 
 .footer {
-  background-color: #007b3e;
+  background-color: #00482b;
   color: #fff;
   padding: 10px;
   text-align: center;
-  position: sticky;  /* Mantiene el footer pegado a la parte inferior de la ventana */
-  bottom: 0;  /* Coloca el footer al final de la ventana */
-
+  position: fixed;  /* Fija el footer en la parte inferior de la ventana */
+  width: 100%;      /* Ocupa todo el ancho de la ventana */
+  bottom: 0;  
 }
 
 .loading-overlay {
@@ -179,11 +180,11 @@ button {
   font-weight: bold;
   margin-right: 5px; /* Espacio entre los botones */
 }
-.Descargar{
-  background-color: #007b3e
+.descargar{
+  background-color: #79c000
 }
 .ver-button {
-  background-color: #6384a5; /* Color de fondo para el botón "Ver" */
+  background-color: #00a99d; /* Color de fondo para el botón "Ver" */
   color: #fff; /* Color del texto para el botón "Ver" */
   padding: 8px 16px; /* Ajusta el relleno según tus necesidades */
   border: none;
@@ -196,7 +197,7 @@ button {
 
 
 .Eliminar {
-  background-color: #ff0000; /* Puedes cambiar el color según tus preferencias */
+  background-color: #ca2929; /* Puedes cambiar el color según tus preferencias */
 }
 
 .modal-overlay {

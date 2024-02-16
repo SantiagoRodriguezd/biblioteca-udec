@@ -53,13 +53,14 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
     return [];
   };
 
-  const uploadFiles = (selectedFiles) => {
+  const uploadFiles = (selectedFiles, description) => {
     if (selectedFiles && selectedFiles.length > 0) {
       const formData = new FormData();
       selectedFiles.forEach((file) => {
         formData.append("archivo", file);
         formData.append("tipo", file.type);
         formData.append("nombre", file.name);
+        formData.append("descripcion", description); // Agregar la descripción al FormData
       });
       let config = {
         method: "post",
@@ -86,6 +87,7 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
   const handleUploadFiles = (e) => {
     const selectedFiles = handleFileSelect(e);
   };
+
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/archivos/all", {
@@ -102,9 +104,10 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
   };
   const sendFiles = async () => {
     const inputElement = document.querySelector('input[type="file"]');
+    const description = prompt("Ingrese una breve descripción del archivo:");
     if (inputElement && inputElement.files.length > 0) {
       const selectedFiles = Array.from(inputElement.files);
-      await uploadFiles(selectedFiles);
+      await uploadFiles(selectedFiles, description);
       await fetchData();
     }
   };
@@ -292,6 +295,7 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                 <thead>
                   <tr>
                     <th>Archivo</th>
+                    <th>Descripción</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -299,8 +303,13 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                   {files.map((file) => (
                     <tr key={file.id_file}>
                       <td>{file.nombre}</td>
+                      <td>{file.descripcion}</td>{" "}
+                      {/* Aquí agregamos la descripción */}
                       <td>
-                        <button onClick={() => handleFileDownload(file)}>
+                        <button
+                          className="descargar"
+                          onClick={() => handleFileDownload(file)}
+                        >
                           Descargar
                         </button>{" "}
                         <a
@@ -311,12 +320,14 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                         >
                           Ver
                         </a>{" "}
-                        <button
-                          className="Eliminar"
-                          onClick={() => handleFileDelete(file)}
-                        >
-                          Eliminar
-                        </button>
+                        {isLoggedIn && (
+                          <button
+                            className="Eliminar"
+                            onClick={() => handleFileDelete(file)}
+                          >
+                            Eliminar
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
