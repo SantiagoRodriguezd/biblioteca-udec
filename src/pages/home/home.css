@@ -88,9 +88,15 @@ margin:0%
 }
 
 .buttons-container {
-  margin: 61px; 
-}
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 30px;
+  margin-bottom: 70px;
 
+
+}
 
 .main-button {
   background-color: #007b3e;
@@ -116,11 +122,10 @@ margin:0%
   background-color:#007b3e;
   color:#fff ;
   padding: 8px 8px;
-  border: none;
   cursor: pointer;
   border-radius: 16px;
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 50x;
 }
 
 

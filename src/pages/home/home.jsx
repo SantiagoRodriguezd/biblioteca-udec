@@ -9,34 +9,10 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
   const [isLoading, setIsLoading] = useState(true);
   const [userName, setUserName] = useState("");
   const [files, setFiles] = useState([]);
-  const [selectedFilesToDelete, setSelectedFilesToDelete] = useState([]);
-
+  const [setSelectedFilesToDelete] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
   const token = sessionStorage.getItem("token");
-
-  const deleteFiles = () => {
-    if (selectedFilesToDelete.length > 0) {
-      const fileIdsToDelete = selectedFilesToDelete.map((file) => file.id_file);
-
-      axios
-        .delete("http://localhost:8080/archivos/eliminarArchivos", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          data: { fileIds: fileIdsToDelete },
-        })
-        .then((response) => {
-          console.log(response.data);
-          const updatedFiles = files.filter(
-            (file) => !fileIdsToDelete.includes(file.id_file)
-          );
-          setFiles(updatedFiles);
-          setSelectedFilesToDelete([]);
-        })
-        .catch((error) => {
-          console.error("Error al eliminar archivos: ", error);
-        });
-    }
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -60,7 +36,7 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
         formData.append("archivo", file);
         formData.append("tipo", file.type);
         formData.append("nombre", file.name);
-        formData.append("descripcion", description); // Agregar la descripción al FormData
+        formData.append("descripcion", description);
       });
       let config = {
         method: "post",
@@ -102,13 +78,34 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
       console.error("Error fetching data: ", error);
     }
   };
+
   const sendFiles = async () => {
     const inputElement = document.querySelector('input[type="file"]');
-    const description = prompt("Ingrese una breve descripción del archivo:");
     if (inputElement && inputElement.files.length > 0) {
-      const selectedFiles = Array.from(inputElement.files);
-      await uploadFiles(selectedFiles, description);
-      await fetchData();
+      // Mostrar un modal de SweetAlert para capturar la descripción
+      const { value: description } = await Swal.fire({
+        title: "Ingrese una breve descripción del archivo:",
+        input: "text",
+        inputPlaceholder: "Descripción...",
+        inputAttributes: {
+          maxlength: 100, // Establecer la longitud máxima del input
+        },
+        showCancelButton: true,
+        confirmButtonText: "Enviar",
+        cancelButtonText: "Cancelar",
+        inputValidator: (value) => {
+          if (!value) {
+            return "La descripción es requerida";
+          }
+        },
+      });
+
+      if (description) {
+        const selectedFiles = Array.from(inputElement.files);
+        await uploadFiles(selectedFiles, description);
+
+        await fetchData();
+      }
     }
   };
 
@@ -170,6 +167,19 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
     return url;
   }
 
+  const handlecopy = (file) => {
+    const pdfUrl = bytesToPDF(file.archivo);
+
+    navigator.clipboard.writeText(pdfUrl).then(
+      function () {
+        alert("URL del PDF copiada al portapapeles: " + pdfUrl);
+      },
+      function (err) {
+        console.error("Error al copiar la URL al portapapeles: ", err);
+      }
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -187,13 +197,6 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
     };
     fetchData();
   }, []);
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState("");
-
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
 
   const openModal = (content) => {
     setModalContent(content);
@@ -312,14 +315,12 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                         >
                           Descargar
                         </button>{" "}
-                        <a
-                          href={bytesToPDF(file.archivo, `${file.nombre}.pdf`)}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          onClick={() => handlecopy(file)}
                           className="ver-button"
                         >
-                          Ver
-                        </a>{" "}
+                          Obtener Url
+                        </button>{" "}
                         {isLoggedIn && (
                           <button
                             className="Eliminar"
@@ -345,11 +346,10 @@ function Home({ isLoggedIn, setIsLoggedIn }) {
                     onChange={handleUploadFiles}
                     multiple
                   />
-                  <div className="button-Cargar">
-                    <button className="Cargar" onClick={sendFiles}>
-                      Cargar archivos
-                    </button>
-                  </div>
+
+                  <button className="Cargar" onClick={sendFiles}>
+                    Cargar archivos
+                  </button>
                 </div>
               </div>
             )}
